@@ -3,6 +3,10 @@
 # ============================================================================
 # Install the Python libraries with:
 #   pip install -r requirements.txt
+
+Flask
+gunicorn
+
 #
 # Everything below the libraries section is NOT pip-installable -- it's
 # listed here as a reference for what else needs to be set up before the
@@ -36,6 +40,3 @@ mysql-connector-python>=8.0.33   # MySQL driver used by db_connector.py
 # 01_mysql_schema_and_data.sql                 - run first, in MySQL Workbench
 # 02_mysql_procedures_functions_triggers.sql   - run second, in MySQL Workbench
 # db_connector.py                              - imported by main_app.py
-
-#Flask
-#gunicorn
