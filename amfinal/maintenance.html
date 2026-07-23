@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% import "_table.html" as t %}
+{% block title %}Maintenance{% endblock %}
+{% block content %}
+
+<div class="panel">
+  <h2>Schedule Maintenance</h2>
+  <form method="POST" action="{{ url_for('maintenance') }}">
+    <div class="form-row">
+      <div class="field">
+        <label>Asset</label>
+        <select name="asset_id" required>
+          {% for aid, name in asset_options %}<option value="{{ aid }}">{{ aid }} - {{ name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field"><label>Provider</label><input name="provider" required></div>
+      <div class="field"><label>Cost</label><input type="number" step="0.01" name="cost" required></div>
+      <div class="field"><label>Next Service Date</label><input type="date" name="next_service_date"></div>
+      <div class="field"><label>&nbsp;</label><button class="btn" type="submit">Schedule</button></div>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <h2>Maintenance History</h2>
+  {{ t.render_table(columns, rows, pill_col='status') }}
+</div>
+{% endblock %}

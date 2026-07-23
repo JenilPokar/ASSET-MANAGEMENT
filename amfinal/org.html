@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% import "_table.html" as t %}
+{% block title %}Departments & Staff{% endblock %}
+{% block content %}
+
+<div class="panel">
+  <h2>Add Department</h2>
+  <form method="POST" action="{{ url_for('org') }}">
+    <input type="hidden" name="form_action" value="add_department">
+    <div class="form-row">
+      <div class="field"><label>Name</label><input name="dept_name" required></div>
+      <div class="field"><label>Head</label><input name="dept_head" required></div>
+      <div class="field"><label>&nbsp;</label><button class="btn" type="submit">Add Department</button></div>
+    </div>
+  </form>
+  {{ t.render_table(dept_columns, dept_rows) }}
+</div>
+
+<div class="panel">
+  <h2>Add Staff Member</h2>
+  <form method="POST" action="{{ url_for('org') }}">
+    <input type="hidden" name="form_action" value="add_employee">
+    <div class="form-row">
+      <div class="field"><label>Name</label><input name="employee_name" required></div>
+      <div class="field">
+        <label>Department</label>
+        <select name="dept_id" required>
+          {% for did, name in dept_options %}
+            <option value="{{ did }}">{{ did }} - {{ name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field"><label>Designation</label><input name="designation" required></div>
+      <div class="field"><label>Email</label><input type="email" name="email"></div>
+      <div class="field"><label>&nbsp;</label><button class="btn" type="submit">Add Staff</button></div>
+    </div>
+  </form>
+  {{ t.render_table(emp_columns, emp_rows) }}
+</div>
+{% endblock %}

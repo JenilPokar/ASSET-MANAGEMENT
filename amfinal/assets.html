@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% import "_table.html" as t %}
+{% block title %}Assets{% endblock %}
+{% block content %}
+
+<div class="panel">
+  <h2>Register New Asset</h2>
+  <form method="POST" action="{{ url_for('assets') }}">
+    <input type="hidden" name="form_action" value="register">
+    <div class="form-row">
+      <div class="field"><label>Asset Name</label><input name="asset_name" required></div>
+      <div class="field"><label>Category</label><input name="category" required></div>
+      <div class="field"><label>Model</label><input name="model"></div>
+      <div class="field"><label>Serial Number</label><input name="serial_number" required></div>
+      <div class="field"><label>Purchase Date</label><input type="date" name="purchase_date" required></div>
+      <div class="field"><label>Cost</label><input type="number" step="0.01" name="cost" required></div>
+      <div class="field">
+        <label>Warranty</label>
+        <select name="warranty_years" required>
+          <option value="1">1 Year</option>
+          <option value="2">2 Years</option>
+          <option value="3">3 Years</option>
+          <option value="4">4 Years</option>
+        </select>
+      </div>
+      <div class="field"><label>&nbsp;</label><button class="btn" type="submit">Register Asset</button></div>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <h2>Update Existing Asset</h2>
+  <form method="POST" action="{{ url_for('assets') }}">
+    <input type="hidden" name="form_action" value="update">
+    <div class="form-row">
+      <div class="field">
+        <label>Asset</label>
+        <select name="asset_id" required>
+          {% for aid, name in asset_options %}
+            <option value="{{ aid }}">{{ aid }} - {{ name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field"><label>New Name</label><input name="asset_name" required></div>
+      <div class="field"><label>New Category</label><input name="category" required></div>
+      <div class="field"><label>New Model</label><input name="model"></div>
+      <div class="field">
+        <label>New Warranty</label>
+        <select name="warranty_years" required>
+          <option value="1">1 Year</option>
+          <option value="2">2 Years</option>
+          <option value="3">3 Years</option>
+          <option value="4">4 Years</option>
+        </select>
+      </div>
+      <div class="field"><label>&nbsp;</label><button class="btn accent" type="submit">Update Asset</button></div>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <h2>Asset Inventory</h2>
+  {{ t.render_table(columns, rows, pill_col='status') }}
+</div>
+{% endblock %}

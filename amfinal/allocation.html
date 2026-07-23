@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% import "_table.html" as t %}
+{% block title %}Allocation{% endblock %}
+{% block content %}
+
+<div class="panel">
+  <h2>Allocate Asset</h2>
+  <form method="POST" action="{{ url_for('allocation') }}">
+    <input type="hidden" name="form_action" value="allocate">
+    <div class="form-row">
+      <div class="field">
+        <label>Asset</label>
+        <select name="asset_id" required>
+          {% for aid, name in asset_options %}<option value="{{ aid }}">{{ aid }} - {{ name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>Employee</label>
+        <select name="employee_id" required>
+          {% for eid, name in emp_options %}<option value="{{ eid }}">{{ eid }} - {{ name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>Department</label>
+        <select name="dept_id" required>
+          {% for did, name in dept_options %}<option value="{{ did }}">{{ did }} - {{ name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field"><label>&nbsp;</label><button class="btn" type="submit">Allocate</button></div>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <h2>Return Asset</h2>
+  <form method="POST" action="{{ url_for('allocation') }}">
+    <input type="hidden" name="form_action" value="return">
+    <div class="form-row">
+      <div class="field">
+        <label>Active Allocation</label>
+        <select name="allocation_id" required>
+          {% for alloc_id, asset_id in active_options %}<option value="{{ alloc_id }}">#{{ alloc_id }} (Asset {{ asset_id }})</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field"><label>&nbsp;</label><button class="btn accent" type="submit">Return</button></div>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <h2>Allocation History</h2>
+  {{ t.render_table(columns, rows, pill_col='status') }}
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import "_table.html" as t %}
+{% block title %}Disposal{% endblock %}
+{% block content %}
+
+<div class="panel">
+  <h2>Dispose Asset</h2>
+  <p style="color:var(--ink-soft); font-size:0.85rem; margin-top:-8px;">
+    Responsible end-of-life handling (SDG 12) — record the disposal method so retired assets are tracked, not lost.
+  </p>
+  <form method="POST" action="{{ url_for('disposal') }}">
+    <div class="form-row">
+      <div class="field">
+        <label>Asset</label>
+        <select name="asset_id" required>
+          {% for aid, name in asset_options %}<option value="{{ aid }}">{{ aid }} - {{ name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>Method</label>
+        <select name="method" required>
+          <option value="SOLD">Sold</option>
+          <option value="SCRAPPED">Scrapped</option>
+          <option value="DONATED">Donated</option>
+          <option value="RECYCLED">Recycled</option>
+          <option value="LOST">Lost</option>
+        </select>
+      </div>
+      <div class="field"><label>Scrap Value</label><input type="number" step="0.01" name="scrap_value" value="0"></div>
+      <div class="field"><label>&nbsp;</label><button class="btn danger" type="submit">Dispose</button></div>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <h2>Disposal History</h2>
+  {{ t.render_table(columns, rows) }}
+</div>
+{% endblock %}

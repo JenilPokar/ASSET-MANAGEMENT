@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Asset Management System{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #F3F5F1;
+    --surface:   #FFFFFF;
+    --ink:       #1E2A26;
+    --ink-soft:  #55635C;
+    --border:    #D9DED7;
+    --brand:     #2B4C5C;
+    --brand-dark:#1C333F;
+    --accent:    #D98E36;
+    --ok:        #3F7A5D;
+    --warn:      #B2762F;
+    --danger:    #B23A3A;
+    --radius:    6px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', sans-serif; font-size: 14.5px;
+  }
+  h1, h2, h3, .brand-mark { font-family: 'Space Grotesk', sans-serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  .shell { display: flex; min-height: 100vh; }
+
+  /* ---- Sidebar ---- */
+  .sidebar {
+    width: 220px; background: var(--brand-dark); color: #E9EEEC;
+    display: flex; flex-direction: column; flex-shrink: 0;
+  }
+  .sidebar .brand-mark {
+    font-size: 1.1rem; font-weight: 700; padding: 20px 18px; letter-spacing: 0.02em;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+  .sidebar .brand-mark span { color: var(--accent); }
+  .sidebar nav { flex: 1; padding: 14px 0; }
+  .sidebar a {
+    display: block; padding: 10px 18px; color: #C8D2CE; text-decoration: none;
+    font-size: 0.92rem; border-left: 3px solid transparent;
+  }
+  .sidebar a:hover, .sidebar a.active {
+    background: rgba(255,255,255,0.06); color: #fff; border-left-color: var(--accent);
+  }
+  .sidebar .footer-note {
+    padding: 14px 18px; font-size: 0.72rem; color: #93A29B;
+    border-top: 1px solid rgba(255,255,255,0.12); line-height: 1.5;
+  }
+
+  /* ---- Top bar ---- */
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .topbar {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar .company { font-weight: 600; }
+  .topbar .company .tag {
+    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--ink-soft); display: block; margin-top: 2px;
+  }
+  .topbar .right { display: flex; align-items: center; gap: 16px; }
+  .clock { font-family: 'IBM Plex Mono', monospace; color: var(--brand); font-size: 0.85rem; }
+  .user-badge {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 999px;
+    padding: 4px 12px; font-size: 0.78rem; color: var(--ink-soft);
+  }
+  .logout-link { color: var(--danger); font-size: 0.8rem; text-decoration: none; }
+
+  .content { padding: 24px; flex: 1; }
+
+  /* ---- Flash messages ---- */
+  .flash { padding: 10px 14px; border-radius: var(--radius); margin-bottom: 14px; font-size: 0.88rem; }
+  .flash.error   { background: #FBEAEA; color: var(--danger); border: 1px solid #EFC6C6; }
+  .flash.success { background: #EAF3EC; color: var(--ok);     border: 1px solid #C7DECE; }
+
+  /* ---- Cards / panels ---- */
+  .panel {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px; margin-bottom: 20px;
+  }
+  .panel h2 { margin: 0 0 14px 0; font-size: 1.05rem; }
+
+  /* ---- Forms ---- */
+  .form-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 4px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: 0.76rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.03em; }
+  .field input, .field select {
+    padding: 7px 9px; border: 1px solid var(--border); border-radius: var(--radius);
+    font-family: inherit; font-size: 0.88rem; min-width: 160px;
+  }
+  .btn {
+    background: var(--brand); color: #fff; border: none; padding: 8px 16px;
+    border-radius: var(--radius); font-size: 0.85rem; cursor: pointer; font-family: 'Inter', sans-serif;
+  }
+  .btn:hover { background: var(--brand-dark); }
+  .btn.accent { background: var(--accent); }
+  .btn.accent:hover { background: var(--warn); }
+  .btn.danger { background: var(--danger); }
+
+  /* ---- Tables ---- */
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--ink-soft); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.03em; }
+  tr:hover td { background: #FAFBF9; }
+
+  /* ---- Status pills ---- */
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 0.72rem; font-weight: 600; }
+  .pill.AVAILABLE          { background: #E5F1E9; color: var(--ok); }
+  .pill.ALLOCATED          { background: #E7EEF3; color: var(--brand); }
+  .pill.UNDER_MAINTENANCE  { background: #FBF1E1; color: var(--warn); }
+  .pill.DISPOSED           { background: #FBEAEA; color: var(--danger); }
+  .pill.ACTIVE             { background: #E7EEF3; color: var(--brand); }
+  .pill.RETURNED           { background: #E5F1E9; color: var(--ok); }
+  .pill.PAID               { background: #E5F1E9; color: var(--ok); }
+  .pill.PENDING            { background: #FBF1E1; color: var(--warn); }
+  .pill.OVERDUE            { background: #FBEAEA; color: var(--danger); }
+
+  /* ---- Status ledger strip (signature element on dashboards) ---- */
+  .ledger { display: flex; border-radius: var(--radius); overflow: hidden; height: 34px; border: 1px solid var(--border); }
+  .ledger-seg { display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.72rem; font-weight: 600; }
+  .metric-grid { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+  .metric-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 20px; min-width: 130px;
+  }
+  .metric-box .value { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700; }
+  .metric-box .label { font-size: 0.76rem; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand-mark">ASSET<span>OS</span></div>
+    <nav>
+      {% if session.get('role') == 'SUPER_ADMIN' %}
+        <a href="{{ url_for('super_admin') }}" class="{{ 'active' if active=='super_admin' }}">Platform Overview</a>
+      {% else %}
+        <a href="{{ url_for('dashboard') }}" class="{{ 'active' if active=='dashboard' }}">Dashboard</a>
+        <a href="{{ url_for('assets') }}" class="{{ 'active' if active=='assets' }}">Assets</a>
+        <a href="{{ url_for('org') }}" class="{{ 'active' if active=='org' }}">Departments &amp; Staff</a>
+        <a href="{{ url_for('allocation') }}" class="{{ 'active' if active=='allocation' }}">Allocation</a>
+        <a href="{{ url_for('maintenance') }}" class="{{ 'active' if active=='maintenance' }}">Maintenance</a>
+        <a href="{{ url_for('disposal') }}" class="{{ 'active' if active=='disposal' }}">Disposal</a>
+        <a href="{{ url_for('reports') }}" class="{{ 'active' if active=='reports' }}">Reports</a>
+      {% endif %}
+    </nav>
+    <div class="footer-note">
+      Developed by Jenil Pokar<br>Roll No. 46 &middot; FY AI-DS<br>
+      SDG 9 &middot; SDG 12 &middot; SDG 13
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="company">
+        {% if session.get('role') == 'SUPER_ADMIN' %}
+          Platform Administration
+          <span class="tag">Super Admin</span>
+        {% else %}
+          {{ session.get('company_name', '') }}
+          <span class="tag">{{ session.get('role', '') }}</span>
+        {% endif %}
+      </div>
+      <div class="right">
+        <span class="clock mono" id="live-clock"></span>
+        {% if session.get('username') %}
+          <span class="user-badge">{{ session.get('username') }}</span>
+          <a class="logout-link" href="{{ url_for('logout') }}">Log out</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</div>
+
+<script>
+  function tickClock() {
+    const el = document.getElementById('live-clock');
+    if (!el) return;
+    const now = new Date();
+    el.textContent = now.toLocaleString(undefined, {
+      weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+</script>
+</body>
+</html>
