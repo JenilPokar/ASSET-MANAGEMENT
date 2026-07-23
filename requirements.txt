@@ -1,0 +1,9 @@
+# ============================================================================
+# ASSET MANAGEMENT SYSTEM (Multi-Tenant SaaS) - REQUIREMENTS
+# Strictly pip-installable list, ready for Render web service deployment.
+# Install locally with:  pip install -r requirements.txt
+# ============================================================================
+
+Flask==3.0.3
+mysql-connector-python==8.4.0
+gunicorn==22.0.0
