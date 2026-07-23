@@ -19,6 +19,7 @@ import os
 
 import mysql.connector
 from mysql.connector import pooling
+print("DEBUG - DB_HOST IS:", os.environ.get("DB_HOST"))
 
 DB_CONFIG = {
     "host": os.environ.get("DB_HOST", "localhost"),
